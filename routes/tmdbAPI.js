@@ -5,57 +5,104 @@ const router = express.Router();
 
 const url = "https://api.themoviedb.org/3";
 
-const getMovies = async (fetch) => {
-  try {
-    const { data } = await axios.get(url + fetch);
-    return data;
-  } catch (error) {
-    console.log(error);
+//creating middleware to request data from external API
+function getMovies(fetch) {
+  return async (req, res, next) => {
+    try {
+      const { data } = await axios.get(url + fetch);
+      res.fetchedData = data;
+      next();
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  // #NOTE: old code
+  // try {
+  //   const { data } = await axios.get(url + fetch);
+  //   return data;
+  // } catch (error) {
+  //   console.log(error);
+  // }
+}
+// #NOTE: old code
+// router.get("/fetchGenres", async (req, res) => {
+//   const data = await getMovies(requestURL.fetchGenres);
+//   res.send(data);
+// });
+
+router.get("/fetchGenres", getMovies(requestURL.fetchGenres), (req, res) => {
+  res.send(res.fetchedData);
+});
+
+router.get(
+  "/fetchTrending",
+  getMovies(requestURL.fetchTrending),
+  (req, res) => {
+    res.send(res.fetchedData);
   }
-};
+);
 
-router.get("/fetchGenres", async (req, res) => {
-  const data = await getMovies(requestURL.fetchGenres);
-  res.send(data);
-});
+router.get(
+  "/fetchNetflixOriginal",
+  getMovies(requestURL.fetchNetflixOriginal),
+  (req, res) => {
+    res.send(res.fetchedData);
+  }
+);
 
-router.get("/fetchTrending", async (req, res) => {
-  const data = await getMovies(requestURL.fetchTrending);
-  res.send(data);
-});
+router.get(
+  "/fetchTopRated",
+  getMovies(requestURL.fetchTopRated),
+  (req, res) => {
+    res.send(res.fetchedData);
+  }
+);
+router.get(
+  "/fetchActionMovies",
+  getMovies(requestURL.fetchActionMovies),
+  (req, res) => {
+    res.send(res.fetchedData);
+  }
+);
 
-router.get("/fetchNetflixOriginal", async (req, res) => {
-  const data = await getMovies(requestURL.fetchNetflixOriginal);
-  res.send(data);
-});
+router.get(
+  "/fetchComedyMovies",
+  getMovies(requestURL.fetchComedyMovies),
+  (req, res) => {
+    res.send(res.fetchedData);
+  }
+);
 
-router.get("/fetchTopRated", async (req, res) => {
-  const data = await getMovies(requestURL.fetchTopRated);
-  res.send(data);
-});
-router.get("/fetchActionMovies", async (req, res) => {
-  const data = await getMovies(requestURL.fetchActionMovies);
-  res.send(data);
-});
+router.get(
+  "/fetchRomanceMovies",
+  getMovies(requestURL.fetchRomanceMovies),
+  (req, res) => {
+    res.send(res.fetchedData);
+  }
+);
 
-router.get("/fetchComedyMovies", async (req, res) => {
-  const data = await getMovies(requestURL.fetchComedyMovies);
-  res.send(data);
-});
+router.get(
+  "/fetchHorrerMovies",
+  getMovies(requestURL.fetchHorrerMovies),
+  (req, res) => {
+    res.send(res.fetchedData);
+  }
+);
 
-router.get("/fetchRomanceMovies", async (req, res) => {
-  const data = await getMovies(requestURL.fetchRomanceMovies);
-  res.send(data);
-});
+router.get(
+  "/fetchDocumentariesMovies",
+  getMovies(requestURL.fetchDocumentariesMovies),
+  (req, res) => {
+    res.send(res.fetchedData);
+  }
+);
 
-router.get("/fetchHorrerMovies", async (req, res) => {
-  const data = await getMovies(requestURL.fetchHorrerMovies);
-  res.send(data);
-});
-
-router.get("/fetchDocumentariesMovies", async (req, res) => {
-  const data = await getMovies(requestURL.fetchDocumentariesMovies);
-  res.send(data);
-});
+router.get(
+  "/fetchPopularTv",
+  getMovies(requestURL.fetchPopularTv),
+  (req, res) => {
+    res.send(res.fetchedData);
+  }
+);
 
 module.exports = router;
