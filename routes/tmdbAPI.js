@@ -1,29 +1,9 @@
 const express = require("express");
-const axios = require("axios").default;
+
+const getMovies = require("../middleware/externalAPIcalls");
 const requestURL = require("./request");
 const router = express.Router();
 
-const url = "https://api.themoviedb.org/3";
-
-//creating middleware to request data from external API
-function getMovies(fetch) {
-  return async (req, res, next) => {
-    try {
-      const { data } = await axios.get(url + fetch);
-      res.fetchedData = data;
-      next();
-    } catch (error) {
-      console.log(error);
-    }
-  };
-  // #NOTE: old code
-  // try {
-  //   const { data } = await axios.get(url + fetch);
-  //   return data;
-  // } catch (error) {
-  //   console.log(error);
-  // }
-}
 // #NOTE: old code
 // router.get("/fetchGenres", async (req, res) => {
 //   const data = await getMovies(requestURL.fetchGenres);
@@ -31,22 +11,24 @@ function getMovies(fetch) {
 // });
 
 router.get("/fetchGenres", getMovies(requestURL.fetchGenres), (req, res) => {
-  res.send(res.fetchedData);
+  res.send(res.locals.fetchedData);
 });
 
 router.get(
   "/fetchTrending",
   getMovies(requestURL.fetchTrending),
+  paginatedData(),
   (req, res) => {
-    res.send(res.fetchedData);
+    res.send(res.locals.paginated);
   }
 );
 
 router.get(
   "/fetchNetflixOriginal",
   getMovies(requestURL.fetchNetflixOriginal),
+  paginatedData(),
   (req, res) => {
-    res.send(res.fetchedData);
+    res.send(res.locals.paginated);
   }
 );
 
@@ -100,9 +82,20 @@ router.get(
 router.get(
   "/fetchPopularTv",
   getMovies(requestURL.fetchPopularTv),
+  paginatedData(),
   (req, res) => {
-    res.send(res.fetchedData);
+    res.send(res.locals.paginated);
   }
 );
+
+function paginatedData() {
+  return (req, res, next) => {
+    const data = res.locals.fetchedData;
+    const limit = req.query.limit;
+    const paginated = data.results.slice(0, limit);
+    res.locals.paginated = paginated;
+    next();
+  };
+}
 
 module.exports = router;
