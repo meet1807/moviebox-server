@@ -42,40 +42,45 @@ router.get(
 router.get(
   "/fetchActionMovies",
   getMovies(requestURL.fetchActionMovies),
+  paginatedData(),
   (req, res) => {
-    res.send(res.fetchedData);
+    res.send(res.locals.fetchedData);
   }
 );
 
 router.get(
   "/fetchComedyMovies",
   getMovies(requestURL.fetchComedyMovies),
+  paginatedData(),
   (req, res) => {
-    res.send(res.fetchedData);
+    res.send(res.locals.fetchedData);
   }
 );
 
 router.get(
   "/fetchRomanceMovies",
   getMovies(requestURL.fetchRomanceMovies),
+  paginatedData(),
   (req, res) => {
-    res.send(res.fetchedData);
+    res.send(res.locals.fetchedData);
   }
 );
 
 router.get(
   "/fetchHorrerMovies",
   getMovies(requestURL.fetchHorrerMovies),
+  paginatedData(),
   (req, res) => {
-    res.send(res.fetchedData);
+    res.send(res.locals.fetchedData);
   }
 );
 
 router.get(
   "/fetchDocumentariesMovies",
   getMovies(requestURL.fetchDocumentariesMovies),
+  paginatedData(),
   (req, res) => {
-    res.send(res.fetchedData);
+    res.send(res.locals.fetchedData);
   }
 );
 
@@ -91,9 +96,10 @@ router.get(
 function paginatedData() {
   return (req, res, next) => {
     const data = res.locals.fetchedData;
-    const limit = req.query.limit;
-    const paginated = data.results.slice(0, limit);
-    res.locals.paginated = paginated;
+    const limit = req.query ? req.query.limit : 20;
+    data.results = data.results.slice(0, limit);
+    // console.log(paginated)
+    res.locals.paginated = data;
     next();
   };
 }

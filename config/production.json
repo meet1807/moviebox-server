@@ -1,0 +1,6 @@
+{
+  "name": "MovieBox - Production",
+  "mail": {
+    "host": "prod-mail-sever"
+  }
+}

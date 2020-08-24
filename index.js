@@ -1,8 +1,24 @@
+//const config = require("config");
+const consoleDebug = require("debug")("app:console");
 const express = require("express");
+const helmet = require("helmet");
+const compression = require("compression");
+const morgan = require("morgan");
 const tmdb = require("./routes/tmdbAPI");
 const app = express();
 
 app.use(express.json());
+app.use(helmet());
+app.use(compression());
+
+//Configuration
+
+if (app.get("env") === "development") {
+  app.use(morgan("tiny"));
+  consoleDebug("Morgan enabled");
+}
+
+//API endpoint
 app.use("/api/fetchMovies", tmdb);
 
 //home route

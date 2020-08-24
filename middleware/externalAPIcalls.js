@@ -6,7 +6,10 @@ const url = "https://api.themoviedb.org/3";
 function getMovies(fetch) {
   return async (req, res, next) => {
     try {
-      const { data } = await axios.get(url + fetch);
+      const page = req.query.page;
+      const { data } = await axios.get(
+        url + fetch + `&page=${page ? page : 1}`
+      );
       res.locals.fetchedData = data;
       next();
       //return res;
