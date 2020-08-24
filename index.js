@@ -2,13 +2,16 @@
 const consoleDebug = require("debug")("app:console");
 const express = require("express");
 const helmet = require("helmet");
+var cors = require("cors");
 const compression = require("compression");
 const morgan = require("morgan");
 const tmdb = require("./routes/tmdbAPI");
 const app = express();
 
 app.use(express.json());
+app.use(cors());
 app.use(helmet());
+
 app.use(compression());
 
 //Configuration
